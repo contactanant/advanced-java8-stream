@@ -78,4 +78,15 @@ public class Person {
 
     }
 
+    public static void addToNameList(Map<Sex, List<String>> map, Person person) {
+        if (map.containsKey(person.getGender())) {
+            map.get(person.getGender()).add(person.getName());
+        } else {
+            map.put(person.getGender(), new ArrayList<String>() {{
+                add(person.getName());
+            }});
+        }
+
+    }
+
 }

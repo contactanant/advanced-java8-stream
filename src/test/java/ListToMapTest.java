@@ -35,4 +35,28 @@ public class ListToMapTest {
         Assert.assertThat(map.get(Person.Sex.FEMALE).get(0).getName(), equalTo("Lianne"));
 
     }
+
+    @Test
+    public void testCovertToMapOnlyUseNameReduction() throws Exception {
+        Map<Person.Sex, List<String>> map = personList.stream().collect(HashMap::new, Person::addToNameList, (h1, h2) -> h1.putAll(h2));
+
+        Assert.assertThat(map.size(), equalTo(2));
+        Assert.assertThat(map.get(Person.Sex.MALE).size(), equalTo(2));
+        Assert.assertThat(map.get(Person.Sex.MALE).get(0), equalTo("Harry"));
+        Assert.assertThat(map.get(Person.Sex.MALE).get(1), equalTo("John"));
+        Assert.assertThat(map.get(Person.Sex.FEMALE).get(0), equalTo("Lianne"));
+    }
+
+    @Test
+    public void testCovertToMapOnlyUseNameCollectors() throws Exception {
+        Map<Person.Sex, List<String>> map = personList.stream().collect(Collectors.groupingBy(Person::getGender,
+                Collectors.mapping(Person::getName, Collectors.toList())));
+
+        Assert.assertThat(map.size(), equalTo(2));
+        Assert.assertThat(map.get(Person.Sex.MALE).size(), equalTo(2));
+        Assert.assertThat(map.get(Person.Sex.MALE).get(0), equalTo("Harry"));
+        Assert.assertThat(map.get(Person.Sex.MALE).get(1), equalTo("John"));
+        Assert.assertThat(map.get(Person.Sex.FEMALE).get(0), equalTo("Lianne"));
+    }
+
 }
